@@ -1,0 +1,48 @@
+﻿
+using System;
+
+namespace Chip8Interpreter.Core
+{
+    public abstract class Timer
+    {
+        protected byte time;
+
+        protected abstract void OnActivate();
+        protected abstract void OnDeactivate();
+
+        public class DelayTimer : Timer
+        {
+            public DelayTimer()
+            {
+            }
+
+            protected override void OnActivate()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnDeactivate()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class SoundTimer : Timer
+        {
+            public SoundTimer()
+            {
+                
+            }
+
+            protected override void OnActivate()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnDeactivate()
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+}
