@@ -4,8 +4,13 @@ using Chip8Interpreter.Core;
 
 namespace Chip8Interpreter.Adaptors.WindowsForms
 {
-    class KeyboardInput : KeypadInputAdaptor
+    public class KeyboardInputAdaptor : KeypadInputAdaptor
     {
+        public KeyboardInputAdaptor()
+        {
+
+        }
+
         public bool GetKeyState(Keypad.KeyID key)
         {
             return false;
