@@ -16,5 +16,20 @@ namespace Chip8Interpreter.Core
             keypad = new Keypad(inputAdaptor);
             cpu = new CPU(memory, display, keypad);
         }
+
+        public Memory GetMemory()
+        {
+            return memory;
+        }
+
+        public CPU GetCPU()
+        {
+            return cpu;
+        }
+
+        public Display GetDisplay()
+        {
+            return display;
+        }
     }
 }

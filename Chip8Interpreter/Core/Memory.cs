@@ -29,5 +29,10 @@ namespace Chip8Interpreter.Core
             }
             Array.Copy(programData, 0, data, ProgramDataStart, programData.Length);
         }
+
+        public byte[] GetData()
+        {
+            return data;
+        }
     }
 }

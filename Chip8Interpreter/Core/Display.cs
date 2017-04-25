@@ -17,5 +17,10 @@ namespace Chip8Interpreter.Core
         {
             buffer = new byte[Width * Height / 8];
         }
+
+        public bool GetPixelOn()
+        {
+            return false;
+        }
     }
 }

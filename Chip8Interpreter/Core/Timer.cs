@@ -10,6 +10,19 @@ namespace Chip8Interpreter.Core
         protected abstract void OnActivate();
         protected abstract void OnDeactivate();
 
+        public byte GetValue()
+        {
+            return time;
+        }
+
+        public void Decrement()
+        {
+            if(time > 0)
+            {
+                time--;
+            }
+        }
+
         public class DelayTimer : Timer
         {
             public DelayTimer()

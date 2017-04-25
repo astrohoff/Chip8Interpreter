@@ -33,6 +33,10 @@
             this.fileSelectPanel = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.cpuStatusPanel = new System.Windows.Forms.Panel();
+            this.nextInstructionPanel = new System.Windows.Forms.Panel();
+            this.nextInstructionTextBox = new System.Windows.Forms.TextBox();
+            this.nextInstructionValueLabel = new System.Windows.Forms.Label();
+            this.nextInstructionLabel = new System.Windows.Forms.Label();
             this.stackPanel = new System.Windows.Forms.Panel();
             this.stackTextBox = new System.Windows.Forms.TextBox();
             this.stackLabel = new System.Windows.Forms.Label();
@@ -58,12 +62,9 @@
             this.decrementTimersButton = new System.Windows.Forms.Button();
             this.runCycleButton = new System.Windows.Forms.Button();
             this.manualControlsLabel = new System.Windows.Forms.Label();
-            this.nextInstructionPanel = new System.Windows.Forms.Panel();
-            this.nextInstructionLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.fileSelectPanel.SuspendLayout();
             this.cpuStatusPanel.SuspendLayout();
+            this.nextInstructionPanel.SuspendLayout();
             this.stackPanel.SuspendLayout();
             this.specialRegistersPanel.SuspendLayout();
             this.generalRegistersPanel.SuspendLayout();
@@ -71,7 +72,6 @@
             this.memoryViewport.SuspendLayout();
             this.displayPanel.SuspendLayout();
             this.manualControlsPanel.SuspendLayout();
-            this.nextInstructionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // openButton
@@ -117,6 +117,49 @@
             this.cpuStatusPanel.Name = "cpuStatusPanel";
             this.cpuStatusPanel.Size = new System.Drawing.Size(284, 285);
             this.cpuStatusPanel.TabIndex = 3;
+            // 
+            // nextInstructionPanel
+            // 
+            this.nextInstructionPanel.Controls.Add(this.nextInstructionTextBox);
+            this.nextInstructionPanel.Controls.Add(this.nextInstructionValueLabel);
+            this.nextInstructionPanel.Controls.Add(this.nextInstructionLabel);
+            this.nextInstructionPanel.Location = new System.Drawing.Point(3, 175);
+            this.nextInstructionPanel.Name = "nextInstructionPanel";
+            this.nextInstructionPanel.Size = new System.Drawing.Size(200, 100);
+            this.nextInstructionPanel.TabIndex = 4;
+            // 
+            // nextInstructionTextBox
+            // 
+            this.nextInstructionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nextInstructionTextBox.Location = new System.Drawing.Point(6, 39);
+            this.nextInstructionTextBox.Multiline = true;
+            this.nextInstructionTextBox.Name = "nextInstructionTextBox";
+            this.nextInstructionTextBox.Size = new System.Drawing.Size(191, 58);
+            this.nextInstructionTextBox.TabIndex = 2;
+            this.nextInstructionTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // nextInstructionValueLabel
+            // 
+            this.nextInstructionValueLabel.AutoSize = true;
+            this.nextInstructionValueLabel.Location = new System.Drawing.Point(81, 23);
+            this.nextInstructionValueLabel.Name = "nextInstructionValueLabel";
+            this.nextInstructionValueLabel.Size = new System.Drawing.Size(35, 13);
+            this.nextInstructionValueLabel.TabIndex = 1;
+            this.nextInstructionValueLabel.Text = "XXXX";
+            // 
+            // nextInstructionLabel
+            // 
+            this.nextInstructionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nextInstructionLabel.Location = new System.Drawing.Point(3, 3);
+            this.nextInstructionLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.nextInstructionLabel.Name = "nextInstructionLabel";
+            this.nextInstructionLabel.Size = new System.Drawing.Size(194, 17);
+            this.nextInstructionLabel.TabIndex = 0;
+            this.nextInstructionLabel.Text = "Next Instruction:";
+            this.nextInstructionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // stackPanel
             // 
@@ -364,6 +407,7 @@
             this.updateDisplayButton.TabIndex = 3;
             this.updateDisplayButton.Text = "Update Display";
             this.updateDisplayButton.UseVisualStyleBackColor = true;
+            this.updateDisplayButton.Click += new System.EventHandler(this.OnUpdateDisplayButtonClick);
             // 
             // decrementTimersButton
             // 
@@ -373,6 +417,7 @@
             this.decrementTimersButton.TabIndex = 2;
             this.decrementTimersButton.Text = "Decrement Timers";
             this.decrementTimersButton.UseVisualStyleBackColor = true;
+            this.decrementTimersButton.Click += new System.EventHandler(this.OnDecrementTimersButtonClick);
             // 
             // runCycleButton
             // 
@@ -382,6 +427,7 @@
             this.runCycleButton.TabIndex = 1;
             this.runCycleButton.Text = "Run CPU Cycle";
             this.runCycleButton.UseVisualStyleBackColor = true;
+            this.runCycleButton.Click += new System.EventHandler(this.OnRunCycleButtonClick);
             // 
             // manualControlsLabel
             // 
@@ -393,48 +439,6 @@
             this.manualControlsLabel.TabIndex = 0;
             this.manualControlsLabel.Text = "Manual Module Controls";
             this.manualControlsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // nextInstructionPanel
-            // 
-            this.nextInstructionPanel.Controls.Add(this.textBox1);
-            this.nextInstructionPanel.Controls.Add(this.label2);
-            this.nextInstructionPanel.Controls.Add(this.nextInstructionLabel);
-            this.nextInstructionPanel.Location = new System.Drawing.Point(3, 175);
-            this.nextInstructionPanel.Name = "nextInstructionPanel";
-            this.nextInstructionPanel.Size = new System.Drawing.Size(200, 100);
-            this.nextInstructionPanel.TabIndex = 4;
-            // 
-            // nextInstructionLabel
-            // 
-            this.nextInstructionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nextInstructionLabel.Location = new System.Drawing.Point(3, 3);
-            this.nextInstructionLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.nextInstructionLabel.Name = "nextInstructionLabel";
-            this.nextInstructionLabel.Size = new System.Drawing.Size(194, 17);
-            this.nextInstructionLabel.TabIndex = 0;
-            this.nextInstructionLabel.Text = "Next Instruction:";
-            this.nextInstructionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(81, 23);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "XXXX";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(6, 39);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(191, 58);
-            this.textBox1.TabIndex = 2;
             // 
             // MainWindow
             // 
@@ -451,6 +455,8 @@
             this.fileSelectPanel.ResumeLayout(false);
             this.fileSelectPanel.PerformLayout();
             this.cpuStatusPanel.ResumeLayout(false);
+            this.nextInstructionPanel.ResumeLayout(false);
+            this.nextInstructionPanel.PerformLayout();
             this.stackPanel.ResumeLayout(false);
             this.stackPanel.PerformLayout();
             this.specialRegistersPanel.ResumeLayout(false);
@@ -462,8 +468,6 @@
             this.memoryViewport.PerformLayout();
             this.displayPanel.ResumeLayout(false);
             this.manualControlsPanel.ResumeLayout(false);
-            this.nextInstructionPanel.ResumeLayout(false);
-            this.nextInstructionPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -502,8 +506,8 @@
         private System.Windows.Forms.Button decrementTimersButton;
         private System.Windows.Forms.Panel nextInstructionPanel;
         private System.Windows.Forms.Label nextInstructionLabel;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox nextInstructionTextBox;
+        private System.Windows.Forms.Label nextInstructionValueLabel;
     }
 }
 

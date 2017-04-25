@@ -54,9 +54,9 @@
     <Compile Include="Core\Memory.cs" />
     <Compile Include="Core\Chip8System.cs" />
     <Compile Include="Core\Timer.cs" />
-    <Compile Include="Core\Types\UInt12.cs" />
-    <Compile Include="Core\Types\UInt4.cs" />
-    <Compile Include="Core\Types\UInt8.cs" />
+    <Compile Include="Core\Types\UInt12Operand.cs" />
+    <Compile Include="Core\Types\UInt4Operand.cs" />
+    <Compile Include="Core\Types\UInt8Operand.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
