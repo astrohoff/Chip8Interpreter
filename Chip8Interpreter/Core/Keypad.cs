@@ -1,5 +1,6 @@
 ﻿using Chip8Interpreter.Adaptors.Interfaces;
 using System;
+using System.Threading;
 
 namespace Chip8Interpreter.Core
 {
@@ -43,9 +44,10 @@ namespace Chip8Interpreter.Core
 
         public byte GetNextKeyPress()
         {
-            KeyID pressedKey = KeyID.None;
+            KeyID pressedKey = GetInputState();
             while(pressedKey == KeyID.None)
             {
+                Thread.Sleep(100);
                 pressedKey = GetInputState();
             }
             return GetKeyValue(pressedKey);

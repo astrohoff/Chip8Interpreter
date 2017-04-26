@@ -57,7 +57,7 @@
             this.displayImagePanel = new System.Windows.Forms.Panel();
             this.displayLabel = new System.Windows.Forms.Label();
             this.manualControlsPanel = new System.Windows.Forms.Panel();
-            this.updateDisplayButton = new System.Windows.Forms.Button();
+            this.run10CyclesButton = new System.Windows.Forms.Button();
             this.decrementTimersButton = new System.Windows.Forms.Button();
             this.runCycleButton = new System.Windows.Forms.Button();
             this.manualControlsLabel = new System.Windows.Forms.Label();
@@ -389,7 +389,7 @@
             // manualControlsPanel
             // 
             this.manualControlsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.manualControlsPanel.Controls.Add(this.updateDisplayButton);
+            this.manualControlsPanel.Controls.Add(this.run10CyclesButton);
             this.manualControlsPanel.Controls.Add(this.decrementTimersButton);
             this.manualControlsPanel.Controls.Add(this.runCycleButton);
             this.manualControlsPanel.Controls.Add(this.manualControlsLabel);
@@ -398,15 +398,15 @@
             this.manualControlsPanel.Size = new System.Drawing.Size(216, 79);
             this.manualControlsPanel.TabIndex = 6;
             // 
-            // updateDisplayButton
+            // run10CyclesButton
             // 
-            this.updateDisplayButton.Location = new System.Drawing.Point(4, 51);
-            this.updateDisplayButton.Name = "updateDisplayButton";
-            this.updateDisplayButton.Size = new System.Drawing.Size(97, 23);
-            this.updateDisplayButton.TabIndex = 3;
-            this.updateDisplayButton.Text = "Update Display";
-            this.updateDisplayButton.UseVisualStyleBackColor = true;
-            this.updateDisplayButton.Click += new System.EventHandler(this.OnUpdateDisplayButtonClick);
+            this.run10CyclesButton.Location = new System.Drawing.Point(4, 51);
+            this.run10CyclesButton.Name = "run10CyclesButton";
+            this.run10CyclesButton.Size = new System.Drawing.Size(97, 23);
+            this.run10CyclesButton.TabIndex = 3;
+            this.run10CyclesButton.Text = "Run 10 Cycles";
+            this.run10CyclesButton.UseVisualStyleBackColor = true;
+            this.run10CyclesButton.Click += new System.EventHandler(this.OnRun10CyclesButtonClick);
             // 
             // decrementTimersButton
             // 
@@ -500,7 +500,7 @@
         private System.Windows.Forms.Panel manualControlsPanel;
         private System.Windows.Forms.Button runCycleButton;
         private System.Windows.Forms.Label manualControlsLabel;
-        private System.Windows.Forms.Button updateDisplayButton;
+        private System.Windows.Forms.Button run10CyclesButton;
         private System.Windows.Forms.Button decrementTimersButton;
         private System.Windows.Forms.Panel nextInstructionPanel;
         private System.Windows.Forms.Label nextInstructionLabel;

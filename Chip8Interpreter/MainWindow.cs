@@ -12,6 +12,9 @@ namespace Chip8Interpreter
         private KeyboardInputAdaptor keyboardInput;
         private Chip8System chip8System;
 
+        private System.Windows.Forms.Timer displayTimer, uiTimer, cpuTimer;
+        private bool timersEnabled = true;
+
         public MainWindow()
         {
             keyboardInput = new KeyboardInputAdaptor();
@@ -23,9 +26,40 @@ namespace Chip8Interpreter
             InitializeStackView();
             InitializeNextInstruction();
             SetManualControlsEnable(false);
-            if (File.Exists(Properties.Settings.Default.ProgramPath))
+            InitializeTimers();
+            if (File.Exists(Properties.Settings.Default.ProgramPath) && false)
             {
                 LoadFile(Properties.Settings.Default.ProgramPath);
+                SetTimerStates(true);
+            }
+        }
+
+        private void InitializeTimers()
+        {
+            displayTimer = new System.Windows.Forms.Timer();
+            uiTimer = new System.Windows.Forms.Timer();
+            cpuTimer = new System.Windows.Forms.Timer();
+            displayTimer.Interval = 100;
+            uiTimer.Interval = 1000;
+            cpuTimer.Interval = 10;
+            displayTimer.Tick += OnDisplayRefresh;
+            uiTimer.Tick += OnUIUpdate;
+            cpuTimer.Tick += OnCPUCycle;
+        }
+
+        private void SetTimerStates(bool running)
+        {
+            if (running && timersEnabled)
+            {
+                displayTimer.Start();
+                uiTimer.Start();
+                cpuTimer.Start();
+            }
+            else
+            {
+                displayTimer.Stop();
+                uiTimer.Stop();
+                cpuTimer.Stop();
             }
         }
 
@@ -37,11 +71,14 @@ namespace Chip8Interpreter
                 Properties.Settings.Default.ProgramPath = openFileDialog1.FileName;
                 Properties.Settings.Default.Save();
                 LoadFile(openFileDialog1.FileName);
+                SetTimerStates(true);
             }
             else
             {
+
                 openButtonLabel.Text = "Select program file";
                 SetManualControlsEnable(false);
+                SetTimerStates(false);
                 chip8System = null;
                 InitializeMemoryView();
                 InitializeGeneralRegistersView();
@@ -148,7 +185,7 @@ namespace Chip8Interpreter
         {
             runCycleButton.Enabled = enable;
             decrementTimersButton.Enabled = enable;
-            updateDisplayButton.Enabled = enable;
+            run10CyclesButton.Enabled = enable;
         }
 
         private void UpdateMemoryView()
@@ -225,11 +262,7 @@ namespace Chip8Interpreter
         private void OnRunCycleButtonClick(object sender, EventArgs e)
         {
             chip8System.GetCPU().RunCycle();
-            UpdateMemoryView();
-            UpdateGeneralRegistersView();
-            UpdateSpecialRegistersView();
-            UpdateStackView();
-            UpdateNextInstruction();
+            UpdateSystemStatus();
             UpdateDisplayView();
         }
 
@@ -262,9 +295,47 @@ namespace Chip8Interpreter
             displayImagePanel.BackgroundImage = displayBitmap;
         }
 
-        private void OnUpdateDisplayButtonClick(object sender, EventArgs e)
+        private void OnRun10CyclesButtonClick(object sender, EventArgs e)
         {
+            for(int i = 0; i < 10; i++)
+            {
+                chip8System.GetCPU().RunCycle();
+            }
+            UpdateMemoryView();
+            UpdateGeneralRegistersView();
+            UpdateSpecialRegistersView();
+            UpdateStackView();
+            UpdateNextInstruction();
             UpdateDisplayView();
+        }
+
+        private void UpdateSystemStatus()
+        {
+            UpdateMemoryView();
+            UpdateGeneralRegistersView();
+            UpdateSpecialRegistersView();
+            UpdateStackView();
+            UpdateNextInstruction();
+        }
+
+        private void OnDisplayRefresh(Object myObject, EventArgs myEventArgs)
+        {
+            chip8System.GetCPU().GetDelayTimer().Decrement();
+            chip8System.GetCPU().GetSoundTimer().Decrement();
+            UpdateDisplayView();
+        }
+
+        private void OnUIUpdate(Object myObject, EventArgs eventArgs)
+        {
+            UpdateSystemStatus();
+        }
+
+        private void OnCPUCycle(Object myObject, EventArgs eventArgs)
+        {
+            for(int i = 0; i < 10; i++)
+            {
+                chip8System.GetCPU().RunCycle();
+            }
         }
     }
 }
