@@ -15,9 +15,10 @@ namespace Chip8Interpreter.Core
             data = new byte[MemorySize];
         }
 
-        public Memory(byte[] programData)
+        public Memory(byte[] fontData, byte[] programData)
         {
             data = new byte[MemorySize];
+            Array.Copy(fontData, 0, data, 0, fontData.Length);
             LoadProgram(programData);
         }
 

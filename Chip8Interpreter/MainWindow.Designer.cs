@@ -289,7 +289,7 @@
             this.memoryPanel.Controls.Add(this.memoryLabel);
             this.memoryPanel.Location = new System.Drawing.Point(322, 49);
             this.memoryPanel.Name = "memoryPanel";
-            this.memoryPanel.Size = new System.Drawing.Size(419, 370);
+            this.memoryPanel.Size = new System.Drawing.Size(419, 401);
             this.memoryPanel.TabIndex = 4;
             // 
             // memoryViewport
@@ -304,7 +304,7 @@
             this.memoryViewport.Controls.Add(this.verticalHexTextBox);
             this.memoryViewport.Location = new System.Drawing.Point(6, 39);
             this.memoryViewport.Name = "memoryViewport";
-            this.memoryViewport.Size = new System.Drawing.Size(408, 326);
+            this.memoryViewport.Size = new System.Drawing.Size(408, 357);
             this.memoryViewport.TabIndex = 2;
             // 
             // memoryTextBox
@@ -443,7 +443,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(753, 431);
+            this.ClientSize = new System.Drawing.Size(753, 462);
             this.Controls.Add(this.manualControlsPanel);
             this.Controls.Add(this.displayPanel);
             this.Controls.Add(this.memoryPanel);

@@ -230,6 +230,7 @@ namespace Chip8Interpreter
             UpdateSpecialRegistersView();
             UpdateStackView();
             UpdateNextInstruction();
+            UpdateDisplayView();
         }
 
         private void OnDecrementTimersButtonClick(object sender, EventArgs e)
@@ -238,16 +239,16 @@ namespace Chip8Interpreter
             chip8System.GetCPU().GetSoundTimer().Decrement();
         }
 
-        private void OnUpdateDisplayButtonClick(object sender, EventArgs e)
+        private void UpdateDisplayView()
         {
             Display display = chip8System.GetDisplay();
             Bitmap displayBitmap = new Bitmap(Display.Width, Display.Height);
-            for(int y = 0; y < Display.Height; y++)
+            for (int y = 0; y < Display.Height; y++)
             {
-                for(int x = 0; x < Display.Width; x++)
+                for (int x = 0; x < Display.Width; x++)
                 {
                     Color pixelColor;
-                    if (display.GetPixelOn())
+                    if (display.GetPixelOn(x, y))
                     {
                         pixelColor = Color.White;
                     }
@@ -259,6 +260,11 @@ namespace Chip8Interpreter
                 }
             }
             displayImagePanel.BackgroundImage = displayBitmap;
+        }
+
+        private void OnUpdateDisplayButtonClick(object sender, EventArgs e)
+        {
+            UpdateDisplayView();
         }
     }
 }

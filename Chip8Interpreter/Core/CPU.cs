@@ -21,6 +21,8 @@ namespace Chip8Interpreter.Core
         private Dictionary<int, Instruction> opcodeLookup;
         private Dictionary<int, string> opcodeDescriptionLookup;
 
+        private Random randomGenerator;
+
         public CPU(Memory memory, Display display, Keypad keypad)
         {
             generalRegisters = new byte[16];
@@ -35,6 +37,7 @@ namespace Chip8Interpreter.Core
             InitializeOpcodeIDMaskLookup();
             InitializeOpcodeLookup();
             InitializeOpcodeDescriptionLookup();
+            randomGenerator = new Random();
         }
 
         private void InitializeOpcodeIDMaskLookup()
@@ -65,20 +68,38 @@ namespace Chip8Interpreter.Core
             opcodeLookup = new Dictionary<int, Instruction>();
             opcodeLookup.Add(0x00E0, new Instruction(ClearScreen));
             opcodeLookup.Add(0x00EE, new Instruction(Return));
-            opcodeLookup.Add(0x1000, new Instruction(JumpDirect));
-            opcodeLookup.Add(0x2000, new Instruction(CallDirect));
-            opcodeLookup.Add(0x3000, new Instruction(SkipIfEqualImmediate));
-            opcodeLookup.Add(0x4000, new Instruction(SkipIfNotEqualImmediate));
-            opcodeLookup.Add(0x5000, new Instruction(SkipIfEqualRegister));
-            opcodeLookup.Add(0x6000, new Instruction(LoadImmediate));
-
-            opcodeLookup.Add(0x8004, new Instruction(AddRegister));
-            opcodeLookup.Add(0x8005, new Instruction(SubtractRegister));
+            opcodeLookup.Add(0x1000, new Instruction(Jump_Direct));
+            opcodeLookup.Add(0x2000, new Instruction(Call_Direct));
+            opcodeLookup.Add(0x3000, new Instruction(SkipIfEqual_Immediate));
+            opcodeLookup.Add(0x4000, new Instruction(SkipIfNotEqual_Immediate));
+            opcodeLookup.Add(0x5000, new Instruction(SkipIfEqual_Register));
+            opcodeLookup.Add(0x6000, new Instruction(Load_Immediate));
+            opcodeLookup.Add(0x7000, new Instruction(Add_Immediate));
+            opcodeLookup.Add(0x8000, new Instruction(MoveRegister));
+            opcodeLookup.Add(0x8001, new Instruction(Or_Register));
+            opcodeLookup.Add(0x8002, new Instruction(And_Register));
+            opcodeLookup.Add(0x8003, new Instruction(XOr_Register));
+            opcodeLookup.Add(0x8004, new Instruction(Add_Register));
+            opcodeLookup.Add(0x8005, new Instruction(Subtract_Register));
             opcodeLookup.Add(0x8006, new Instruction(ShiftRight));
-            opcodeLookup.Add(0x8007, new Instruction(SubractRegisterReversed));
+            opcodeLookup.Add(0x8007, new Instruction(SubractReversed_Register));
             opcodeLookup.Add(0x800E, new Instruction(ShiftLeft));
-            opcodeLookup.Add(0x9000, new Instruction(SkipIfNotEqualRegister));
-            opcodeLookup.Add(0xA000, new Instruction(LoadAddressImmediate));
+            opcodeLookup.Add(0x9000, new Instruction(SkipIfNotEqual_Register));
+            opcodeLookup.Add(0xA000, new Instruction(LoadAddress_Immediate));
+            opcodeLookup.Add(0xB000, new Instruction(Jump_V0_Direct));
+            opcodeLookup.Add(0xC000, new Instruction(RandomAnd_Immediate));
+            opcodeLookup.Add(0xD000, new Instruction(DrawSprite));
+            opcodeLookup.Add(0xE09E, new Instruction(SkipIfKeyPressed_Register));
+            opcodeLookup.Add(0xE0A1, new Instruction(SkipIfKeyNotPressed_Register));
+            opcodeLookup.Add(0xF007, new Instruction(LoadDelayTimer));
+            opcodeLookup.Add(0xF00A, new Instruction(LoadNextKeyPress));
+            opcodeLookup.Add(0xF015, new Instruction(SetDelayTimer_Register));
+            opcodeLookup.Add(0xF018, new Instruction(SetSoundTimer_Register));
+            opcodeLookup.Add(0xF01E, new Instruction(AdvanceAddress_Register));
+            opcodeLookup.Add(0xF029, new Instruction(PointToCharacterSprite_Register));
+            opcodeLookup.Add(0xF033, new Instruction(StoreDecimal));
+            opcodeLookup.Add(0xF055, new Instruction(StoreRegistersThroughX));
+            opcodeLookup.Add(0xF065, new Instruction(LoadRegistersThroughX));
         }
 
         private void InitializeOpcodeDescriptionLookup()
@@ -86,22 +107,38 @@ namespace Chip8Interpreter.Core
             opcodeDescriptionLookup = new Dictionary<int, string>();
             opcodeDescriptionLookup.Add(0x00E0, "Clear Screen");
             opcodeDescriptionLookup.Add(0x00EE, "Return");
-            opcodeDescriptionLookup.Add(0x1000, "Jump Direct");
-            opcodeDescriptionLookup.Add(0x2000, "Call Direct");
-            opcodeDescriptionLookup.Add(0x3000, "Skip if equal immediate");
-            opcodeDescriptionLookup.Add(0x4000, "Skip if not equal immediate");
-            opcodeDescriptionLookup.Add(0x5000, "Skip if equal register");
-            opcodeDescriptionLookup.Add(0x6000, "Load Immediate");
-
-            opcodeDescriptionLookup.Add(0x8004, "Add Register");
-            opcodeDescriptionLookup.Add(0x8005, "Subtract Register");
+            opcodeDescriptionLookup.Add(0x1000, "Jump - Direct");
+            opcodeDescriptionLookup.Add(0x2000, "Call - Direct");
+            opcodeDescriptionLookup.Add(0x3000, "Skip if equal - immediate");
+            opcodeDescriptionLookup.Add(0x4000, "Skip if not equal - immediate");
+            opcodeDescriptionLookup.Add(0x5000, "Skip if equal - register");
+            opcodeDescriptionLookup.Add(0x6000, "Load - Immediate");
+            opcodeDescriptionLookup.Add(0x7000, "Add - Immediate");
+            opcodeDescriptionLookup.Add(0x8000, "Move - Register");
+            opcodeDescriptionLookup.Add(0x8001, "Or - Register");
+            opcodeDescriptionLookup.Add(0x8002, "And - Register");
+            opcodeDescriptionLookup.Add(0x8003, "XOr - Register");
+            opcodeDescriptionLookup.Add(0x8004, "Add - Register");
+            opcodeDescriptionLookup.Add(0x8005, "Subtract - Register");
             opcodeDescriptionLookup.Add(0x8006, "Shift Right");
-            opcodeDescriptionLookup.Add(0x8007, "Subtract Register Reversed");
+            opcodeDescriptionLookup.Add(0x8007, "Subtract Reversed - Register");
             opcodeDescriptionLookup.Add(0x800E, "Shift Left");
-            opcodeDescriptionLookup.Add(0x9000, "Skip if not equal register");
-            opcodeDescriptionLookup.Add(0xA000, "Load Address Immediate");
-
-
+            opcodeDescriptionLookup.Add(0x9000, "Skip if not equal - register");
+            opcodeDescriptionLookup.Add(0xA000, "Load Address - Immediate");
+            opcodeDescriptionLookup.Add(0xB000, "Jump Direct + V0 offset");
+            opcodeDescriptionLookup.Add(0xC000, "Random And - Immediate");
+            opcodeDescriptionLookup.Add(0xD000, "Draw Sprite");
+            opcodeDescriptionLookup.Add(0xE09E, "Skip if key pressed");
+            opcodeDescriptionLookup.Add(0xE0A1, "Skip if key not pressed");
+            opcodeDescriptionLookup.Add(0xF007, "Load Delay Timer");
+            opcodeDescriptionLookup.Add(0xF00A, "Load Next Key Press");
+            opcodeDescriptionLookup.Add(0xF015, "Set Delay Timer - Register");
+            opcodeDescriptionLookup.Add(0xF018, "Set Sound Timer - Register");
+            opcodeDescriptionLookup.Add(0xF01E, "Advance Address - Register");
+            opcodeDescriptionLookup.Add(0xF029, "Point To Character Sprite - Register");
+            opcodeDescriptionLookup.Add(0xF033, "Store Decimal");
+            opcodeDescriptionLookup.Add(0xF055, "Store Registers through X");
+            opcodeDescriptionLookup.Add(0xF065, "Load Registers through X");
         }
 
         public void RunCycle()
@@ -133,33 +170,33 @@ namespace Chip8Interpreter.Core
 
         // Opcode functions.
 
-        public void ClearScreen(ushort opcode)
+        private void ClearScreen(ushort opcode)
         {
             display.ClearDisplay();
         }
 
-        public void Return(ushort opcode)
+        private void Return(ushort opcode)
         {
             programCounter = stack.Pop();
         }
 
-        public void SystemJump(ushort opcode)
+        private void SystemJump(ushort opcode)
         {
             // Only relevent on original machines.
         }
 
-        public void JumpDirect(ushort opcode)
+        private void Jump_Direct(ushort opcode)
         {
             programCounter = (ushort)(opcode & 0x0FFF);
         }
 
-        public void CallDirect(ushort opcode)
+        private void Call_Direct(ushort opcode)
         {
             stack.Push(programCounter);
             programCounter = (ushort)(opcode & 0x0FFF);
         }
 
-        public void SkipIfEqualImmediate(ushort opcode)
+        private void SkipIfEqual_Immediate(ushort opcode)
         {
             if(generalRegisters[(opcode & 0x0F00) >> 8] == (opcode & 0x00FF))
             {
@@ -167,7 +204,7 @@ namespace Chip8Interpreter.Core
             }
         }
 
-        public void SkipIfNotEqualImmediate(ushort opcode)
+        private void SkipIfNotEqual_Immediate(ushort opcode)
         {
             if(generalRegisters[((opcode & 0x0F00) >> 8)] != (opcode & 0x00FF))
             {
@@ -175,7 +212,7 @@ namespace Chip8Interpreter.Core
             }
         }
 
-        public void SkipIfEqualRegister(ushort opcode)
+        private void SkipIfEqual_Register(ushort opcode)
         {
             if(generalRegisters[(opcode & 0x0F00) >> 8] == generalRegisters[(opcode & 0x00F0) >> 4])
             {
@@ -183,13 +220,37 @@ namespace Chip8Interpreter.Core
             }
         }
 
-        public void LoadImmediate(ushort opcode)
+        private void Load_Immediate(ushort opcode)
         {
             generalRegisters[(opcode & 0x0F00) >> 8] = (byte)(opcode & 0x00FF);
         }
 
+        private void Add_Immediate(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] += (byte)(opcode & 0x00FF);
+        }
 
-        public void AddRegister(ushort opcode)
+        private void MoveRegister(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] = generalRegisters[(opcode & 0x00F0) >> 4];
+        }
+
+        private void Or_Register(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] |= generalRegisters[(opcode & 0x00F0) >> 4];
+        }
+
+        private void And_Register(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] &= generalRegisters[(opcode & 0x00F0) >> 4];
+        }
+
+        private void XOr_Register(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] ^= generalRegisters[(opcode & 0x00F0) >> 4];
+        }
+
+        private void Add_Register(ushort opcode)
         {
             int registerIndex0 = (opcode & 0x0F00) >> 8;
             int registerIndex1 = (opcode & 0x00F0) >> 4;
@@ -205,7 +266,7 @@ namespace Chip8Interpreter.Core
             generalRegisters[registerIndex0] = (byte)sum;
         }
 
-        public void SubtractRegister(ushort opcode)
+        private void Subtract_Register(ushort opcode)
         {
             int registerIndex0 = (opcode & 0x0F00) >> 8;
             int registerIndex1 = (opcode & 0x00F0) >> 4;
@@ -221,7 +282,7 @@ namespace Chip8Interpreter.Core
             generalRegisters[registerIndex0] = (byte)difference;
         }
 
-        public void ShiftRight(ushort opcode)
+        private void ShiftRight(ushort opcode)
         {
             int srcRegisterIndex = (opcode & 0x00F0) >> 4;
             int dstRegisterIndex = (opcode & 0x0F00) >> 8;
@@ -230,7 +291,7 @@ namespace Chip8Interpreter.Core
             generalRegisters[dstRegisterIndex] = (byte)(generalRegisters[srcRegisterIndex] >> 1);
         }
 
-        public void SubractRegisterReversed(ushort opcode)
+        private void SubractReversed_Register(ushort opcode)
         {
             int registerIndex0 = (opcode & 0x0F00) >> 8;
             int registerIndex1 = (opcode & 0x00F0) >> 4;
@@ -246,7 +307,7 @@ namespace Chip8Interpreter.Core
             generalRegisters[registerIndex0] = (byte)difference;
         }
 
-        public void ShiftLeft(ushort opcode)
+        private void ShiftLeft(ushort opcode)
         {
             int srcRegisterIndex = (opcode & 0x00F0) >> 4;
             int dstRegisterIndex = (opcode & 0x0F00) >> 8;
@@ -255,7 +316,7 @@ namespace Chip8Interpreter.Core
             generalRegisters[dstRegisterIndex] = (byte)(generalRegisters[srcRegisterIndex] << 1);
         }
 
-        public void SkipIfNotEqualRegister(ushort opcode)
+        private void SkipIfNotEqual_Register(ushort opcode)
         {
             if(generalRegisters[(opcode & 0x0F00) >> 8] != generalRegisters[(opcode & 0x00F0) >> 4])
             {
@@ -263,9 +324,108 @@ namespace Chip8Interpreter.Core
             }
         }
 
-        public void LoadAddressImmediate(ushort opcode)
+        private void LoadAddress_Immediate(ushort opcode)
         {
             addressRegister = (ushort)(opcode & 0x0FFF);
+        }
+
+        private void Jump_V0_Direct(ushort opcode)
+        {
+            programCounter = (ushort)((opcode & 0x0FFF) + generalRegisters[0]);
+        }
+
+        private void RandomAnd_Immediate(ushort opcode)
+        {
+            byte random = (byte)randomGenerator.Next(0, 256);
+            generalRegisters[(opcode & 0x0F00) >> 8] = (byte)(random & (opcode & 0x00FF));
+        }
+
+        private void DrawSprite(ushort opcode)
+        {
+            byte x = generalRegisters[(opcode & 0x0F00) >> 8];
+            byte y = generalRegisters[(opcode & 0x00F0) >> 4];
+            int spriteSize = opcode & 0x000F;
+            byte[] spriteData = new byte[spriteSize];
+            byte[] memoryData = memory.GetData();
+            Array.Copy(memoryData, addressRegister, spriteData, 0, spriteSize);
+            display.DrawSprite(x, y, spriteData);
+        }
+
+        private void SkipIfKeyPressed_Register(ushort opcode)
+        {
+            if(keypad.GetKeyState(generalRegisters[(opcode & 0x0F00) >> 8]))
+            {
+                programCounter += 2;
+            }
+        }
+
+        private void SkipIfKeyNotPressed_Register(ushort opcode)
+        {
+            if (!keypad.GetKeyState(generalRegisters[(opcode & 0x0F00) >> 8]))
+            {
+                programCounter += 2;
+            }
+        }
+
+        private void LoadDelayTimer(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] = delayTimer.GetValue();
+        } 
+
+        private void LoadNextKeyPress(ushort opcode)
+        {
+            generalRegisters[(opcode & 0x0F00) >> 8] = keypad.GetNextKeyPress();
+        }
+
+        private void SetDelayTimer_Register(ushort opcode)
+        {
+            delayTimer.SetValue(generalRegisters[(opcode & 0x0F00) >> 8]);
+        }
+
+        private void SetSoundTimer_Register(ushort opcode)
+        {
+            soundTimer.SetValue(generalRegisters[(opcode & 0x0F00) >> 8]);
+        }
+
+        private void AdvanceAddress_Register(ushort opcode)
+        {
+            addressRegister += generalRegisters[(opcode & 0x0F00) >> 8];
+        }
+
+        private void PointToCharacterSprite_Register(ushort opcode)
+        {
+            addressRegister = (ushort)(5 * (generalRegisters[(opcode & 0x0F00) >> 8] & 0x0F));
+        }
+
+        private void StoreDecimal(ushort opcode)
+        {
+            byte value = generalRegisters[(opcode & 0x0F00) >> 8];
+            memory.WriteByte((byte)(value / 100), addressRegister);
+            addressRegister++;
+            memory.WriteByte((byte)((value % 100) / 10), addressRegister);
+            addressRegister++;
+            memory.WriteByte((byte)(value % 10), addressRegister);
+            addressRegister++;
+        }
+
+        private void StoreRegistersThroughX(ushort opcode)
+        {
+            int x = (opcode & 0x0F00) >> 8;
+            for (int i = 0; i <= x; i++)
+            {
+                memory.WriteByte(generalRegisters[i], addressRegister);
+                addressRegister++;
+            }
+        }
+
+        private void LoadRegistersThroughX(ushort opcode)
+        {
+            int x = (opcode & 0x0F00) >> 8;
+            for (int i = 0; i <= x; i++)
+            {
+                generalRegisters[i] = memory.ReadByte(addressRegister);
+                addressRegister++;
+            }
         }
 
 
@@ -282,7 +442,7 @@ namespace Chip8Interpreter.Core
                 }
                 else
                 {
-                    description = "Unimplemented";
+                    description = "No Description";
                 }
             }
             return description;

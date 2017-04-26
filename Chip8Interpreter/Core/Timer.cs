@@ -10,6 +10,11 @@ namespace Chip8Interpreter.Core
         protected abstract void OnActivate();
         protected abstract void OnDeactivate();
 
+        public void SetValue(byte value)
+        {
+            time = value;
+        }
+
         public byte GetValue()
         {
             return time;
