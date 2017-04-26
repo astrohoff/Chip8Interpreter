@@ -215,11 +215,11 @@ namespace Chip8Interpreter
 
         private void UpdateNextInstruction()
         {
-            byte[] memory = chip8System.GetMemory().GetData();
+            Memory memory = chip8System.GetMemory();
             ushort offset = chip8System.GetCPU().GetProgramCounter();
-            ushort instruction = (ushort)((memory[offset] << 8) | (memory[offset + 1]));
+            ushort instruction = (ushort)((memory.ReadByte(offset) << 8) | (memory.ReadByte(offset + 1)));
             nextInstructionValueLabel.Text = instruction.ToString("X4");
-            nextInstructionTextBox.Text = CPU.GetInstructionDescription(instruction);
+            nextInstructionTextBox.Text = chip8System.GetCPU().GetInstructionDescription(instruction);
         }
 
         private void OnRunCycleButtonClick(object sender, EventArgs e)

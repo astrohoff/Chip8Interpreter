@@ -34,5 +34,15 @@ namespace Chip8Interpreter.Core
         {
             return data;
         }
+
+        public byte ReadByte(int address)
+        {
+            return data[address];
+        }
+
+        public void WriteByte(byte value, int address)
+        {
+            data[address] = value;
+        }
     }
 }
