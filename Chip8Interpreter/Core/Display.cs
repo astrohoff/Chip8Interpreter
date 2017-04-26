@@ -18,6 +18,14 @@ namespace Chip8Interpreter.Core
             buffer = new byte[Width * Height / 8];
         }
 
+        public void ClearDisplay()
+        {
+            for(int i = 0; i < buffer.Length; i++)
+            {
+                buffer[i] = 0;
+            }
+        }
+
         public bool GetPixelOn()
         {
             return false;

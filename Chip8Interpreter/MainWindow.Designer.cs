@@ -53,7 +53,6 @@
             this.verticalHexTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.memoryLabel = new System.Windows.Forms.Label();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.displayPanel = new System.Windows.Forms.Panel();
             this.displayImagePanel = new System.Windows.Forms.Panel();
             this.displayLabel = new System.Windows.Forms.Label();
@@ -493,7 +492,6 @@
         private System.Windows.Forms.Label memoryLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel memoryViewport;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.TextBox memoryTextBox;
         private System.Windows.Forms.TextBox verticalHexTextBox;
         private System.Windows.Forms.Panel displayPanel;

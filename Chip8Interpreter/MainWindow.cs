@@ -14,6 +14,7 @@ namespace Chip8Interpreter
 
         public MainWindow()
         {
+            keyboardInput = new KeyboardInputAdaptor();
             InitializeComponent();
             InitializeVerticalHex();
             InitializeMemoryView();
@@ -22,7 +23,10 @@ namespace Chip8Interpreter
             InitializeStackView();
             InitializeNextInstruction();
             SetManualControlsEnable(false);
-            keyboardInput = new KeyboardInputAdaptor();
+            if (File.Exists(Properties.Settings.Default.ProgramPath))
+            {
+                LoadFile(Properties.Settings.Default.ProgramPath);
+            }
         }
 
         private void OnOpenButtonClick(object sender, EventArgs e)
@@ -30,16 +34,9 @@ namespace Chip8Interpreter
             DialogResult result = openFileDialog1.ShowDialog();
             if(result == DialogResult.OK)
             {
-                string filePath = openFileDialog1.FileName;
-                openButtonLabel.Text = filePath;
-                byte[] programData = File.ReadAllBytes(filePath);
-                chip8System = new Chip8System(programData, keyboardInput);
-                SetManualControlsEnable(true);
-                UpdateMemoryView();
-                UpdateGeneralRegistersView();
-                UpdateSpecialRegistersView();
-                UpdateStackView();
-                UpdateNextInstruction();
+                Properties.Settings.Default.ProgramPath = openFileDialog1.FileName;
+                Properties.Settings.Default.Save();
+                LoadFile(openFileDialog1.FileName);
             }
             else
             {
@@ -52,6 +49,19 @@ namespace Chip8Interpreter
                 InitializeStackView();
                 InitializeNextInstruction();
             }
+        }
+
+        private void LoadFile(string filePath)
+        {
+            openButtonLabel.Text = filePath;
+            byte[] programData = File.ReadAllBytes(filePath);
+            chip8System = new Chip8System(programData, keyboardInput);
+            SetManualControlsEnable(true);
+            UpdateMemoryView();
+            UpdateGeneralRegistersView();
+            UpdateSpecialRegistersView();
+            UpdateStackView();
+            UpdateNextInstruction();
         }
 
         private void InitializeVerticalHex()
